@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import './App.scss';
-import { authenticate } from './services/Authentication';
+import { authenticate, twoFactorVerify } from './services/Authentication';
 import { AuthenticationRequestType } from './types/models/AuthenticationRequest';
 
 function App() {
@@ -8,6 +8,7 @@ function App() {
   const [response, setResponse] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [twoFaRequired, setTwoFaRequired] = useState(false);
 
   const click = useCallback(async () => {
     const res = await authenticate({
@@ -21,7 +22,26 @@ function App() {
     if (res.token) {
       setToken(res.token);
     }
-  }, [username, password, setResponse]);
+
+    if (res.result === 'require_2fa') {
+      setTwoFaRequired(true);
+    }
+  }, [username, password, setResponse, setToken, setTwoFaRequired]);
+
+  const click2FA = useCallback(async () => {
+    if (!token) return;
+    const res = await twoFactorVerify(
+      {
+        token: password,
+      },
+      token
+    );
+
+    setResponse(JSON.stringify(res));
+    if (res.token) {
+      setToken(res.token);
+    }
+  }, [password, setResponse, setToken, token]);
 
   const updateUsername = (e: React.ChangeEvent<HTMLInputElement>) =>
     setUsername(e.target.value);
@@ -30,19 +50,34 @@ function App() {
 
   return (
     <div className="App">
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={updateUsername}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={updatePassword}
-      />
-      <button onClick={click}>Authenticate</button>
+      {!token ? (
+        <>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={updateUsername}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={updatePassword}
+          />
+          <button onClick={click}>Authenticate</button>
+        </>
+      ) : null}
+      {twoFaRequired ? (
+        <>
+          <input
+            type="password"
+            placeholder="2FA code"
+            value={password}
+            onChange={updatePassword}
+          />
+          <button onClick={click2FA}>2FA verify</button>
+        </>
+      ) : null}
       <strong>{token}</strong>
       <pre>{response}</pre>
     </div>
