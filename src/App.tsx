@@ -1,4 +1,6 @@
 import React, { useCallback, useState } from 'react';
+import QRCode from 'qrcode.react';
+
 import './App.scss';
 import {
   authenticate,
@@ -13,6 +15,7 @@ function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [twoFaRequired, setTwoFaRequired] = useState(false);
+  const [twoFaUri, setTwoFaUri] = useState<string>();
 
   const click = useCallback(async () => {
     const res = await authenticate({
@@ -52,7 +55,10 @@ function App() {
     const res = await twoFactorEnable(token);
 
     setResponse(JSON.stringify(res));
-  }, [password, setResponse, setToken, token]);
+    if (res.uri) {
+      setTwoFaUri(res.uri);
+    }
+  }, [password, setResponse, setToken, token, setTwoFaUri]);
 
   const updateUsername = (e: React.ChangeEvent<HTMLInputElement>) =>
     setUsername(e.target.value);
@@ -93,6 +99,7 @@ function App() {
       <button onClick={click2FAEnable} disabled={!token}>
         Enable 2FA
       </button>
+      {twoFaUri ? <QRCode value={twoFaUri} /> : null}
       <pre>{response}</pre>
     </div>
   );

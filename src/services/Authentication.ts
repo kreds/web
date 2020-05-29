@@ -18,7 +18,7 @@ export async function twoFactorVerify(
   request: TwoFactorRequest,
   token: string
 ) {
-  const req = await fetch(apiUrl + 'v1/2fa/verify', {
+  const req = await fetch(apiUrl + 'v1/authentication/2fa/verify', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ export async function twoFactorVerify(
 }
 
 export async function twoFactorEnable(token: string) {
-  const req = await fetch(apiUrl + 'v1/2fa/enable', {
+  const req = await fetch(apiUrl + 'v1/authentication/2fa/enable', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
