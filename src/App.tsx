@@ -1,6 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import './App.scss';
-import { authenticate, twoFactorVerify } from './services/Authentication';
+import {
+  authenticate,
+  twoFactorVerify,
+  twoFactorEnable,
+} from './services/Authentication';
 import { AuthenticationRequestType } from './types/models/AuthenticationRequest';
 
 function App() {
@@ -43,6 +47,13 @@ function App() {
     }
   }, [password, setResponse, setToken, token]);
 
+  const click2FAEnable = useCallback(async () => {
+    if (!token) return;
+    const res = await twoFactorEnable(token);
+
+    setResponse(JSON.stringify(res));
+  }, [password, setResponse, setToken, token]);
+
   const updateUsername = (e: React.ChangeEvent<HTMLInputElement>) =>
     setUsername(e.target.value);
   const updatePassword = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -79,6 +90,9 @@ function App() {
         </>
       ) : null}
       <strong>{token}</strong>
+      <button onClick={click2FAEnable} disabled={!token}>
+        Enable 2FA
+      </button>
       <pre>{response}</pre>
     </div>
   );

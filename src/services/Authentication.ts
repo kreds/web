@@ -29,3 +29,16 @@ export async function twoFactorVerify(
 
   return await req.json();
 }
+
+export async function twoFactorEnable(token: string) {
+  const req = await fetch(apiUrl + 'v1/2fa/enable', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    },
+    body: JSON.stringify({}),
+  });
+
+  return await req.json();
+}
