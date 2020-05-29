@@ -4,6 +4,7 @@ import { authenticate } from './services/Authentication';
 import { AuthenticationRequestType } from './types/models/AuthenticationRequest';
 
 function App() {
+  const [token, setToken] = useState<string>();
   const [response, setResponse] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -17,6 +18,9 @@ function App() {
     });
 
     setResponse(JSON.stringify(res));
+    if (res.token) {
+      setToken(res.token);
+    }
   }, [username, password, setResponse]);
 
   const updateUsername = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -39,6 +43,7 @@ function App() {
         onChange={updatePassword}
       />
       <button onClick={click}>Authenticate</button>
+      <strong>{token}</strong>
       <pre>{response}</pre>
     </div>
   );
