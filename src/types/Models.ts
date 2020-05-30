@@ -1,4 +1,6 @@
+import { ActionType } from './ActionType';
+
 export interface ActionModel {
-  type: string;
+  type: ActionType;
   value: any;
 }
