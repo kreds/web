@@ -9,7 +9,7 @@ import { AuthenticationRequestType } from '../types/models/AuthenticationRequest
 
 import { Centered } from '../styles';
 
-function Authentication() {
+const Authentication: React.FC = () => {
   const [token, setToken] = useState<string>();
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState('');
@@ -120,6 +120,6 @@ function Authentication() {
       </Card>
     </Centered>
   );
-}
+};
 
 export default Authentication;

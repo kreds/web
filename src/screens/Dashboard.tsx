@@ -3,10 +3,10 @@ import QRCode from 'qrcode.react';
 
 import { twoFactorEnable } from '../services/Authentication';
 
-function Dashboard() {
-  const [token, setToken] = useState<string>();
+export const Dashboard: React.FC = () => {
   const [response, setResponse] = useState('');
   const [twoFaUri, setTwoFaUri] = useState<string>();
+  const token = '';
 
   const click2FAEnable = useCallback(async () => {
     if (!token) return;
@@ -20,14 +20,11 @@ function Dashboard() {
 
   return (
     <div>
-      <strong>{token}</strong>
-      <button onClick={click2FAEnable} disabled={!token}>
-        Enable 2FA
-      </button>
+      <button onClick={click2FAEnable}>Enable 2FA</button>
       {twoFaUri ? <QRCode value={twoFaUri} /> : null}
       <pre>{response}</pre>
     </div>
   );
-}
+};
 
 export default Dashboard;

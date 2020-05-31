@@ -5,13 +5,15 @@ import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import Authentication from './screens/Authentication';
 import Dashboard from './screens/Dashboard';
 import { StateType } from './reducers';
+import NavBar from './components/NavBar';
 
-function App() {
+const App: React.FC = () => {
   const authenticated = useSelector((state: StateType) => state.authenticated);
 
   return (
     <BrowserRouter>
       <div className="App">
+        <NavBar />
         <Switch>
           {authenticated ? (
             <>
@@ -36,6 +38,6 @@ function App() {
       </div>
     </BrowserRouter>
   );
-}
+};
 
 export default App;

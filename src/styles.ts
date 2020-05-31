@@ -5,4 +5,5 @@ export const Centered = styled('div', {
   justifyContent: 'center',
   alignItems: 'center',
   height: '100%',
+  paddingTop: '50px',
 });
