@@ -16,7 +16,7 @@ function Dashboard() {
     if (res.uri) {
       setTwoFaUri(res.uri);
     }
-  }, [setResponse, setToken, token, setTwoFaUri]);
+  }, [setResponse, token, setTwoFaUri]);
 
   return (
     <div>

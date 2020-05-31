@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 
-import './App.scss';
 import Authentication from './screens/Authentication';
 import Dashboard from './screens/Dashboard';
 import { StateType } from './reducers';
