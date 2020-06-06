@@ -3,7 +3,17 @@ import { put, takeEvery, call } from 'redux-saga/effects';
 import { ActionModel } from '../types/Models';
 import { ActionType } from '../types/ActionType';
 import { currentUser } from '../services/Authentication';
-import { setCurrentUserAction } from '../actions/state';
+import { setCurrentUserAction, setAuthenticatedAction } from '../actions/state';
+
+function* initializeAuthentication() {
+  if (localStorage.getItem('kreds_token')) {
+    const res = yield call(() => currentUser());
+    if (res.isAuthenticated) {
+      yield put(setAuthenticatedAction(true));
+      yield put(setCurrentUserAction(res.user));
+    }
+  }
+}
 
 function* onAuthenticatedChange(action: ActionModel) {
   if (action.value !== true) {
@@ -15,5 +25,6 @@ function* onAuthenticatedChange(action: ActionModel) {
 }
 
 export default function* root(dispatch: (action: any) => void) {
+  yield initializeAuthentication();
   yield takeEvery(ActionType.SET_AUTHENTICATED, onAuthenticatedChange);
 }
