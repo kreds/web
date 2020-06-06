@@ -1,5 +1,7 @@
 import { AuthenticationRequest } from '../types/models/AuthenticationRequest';
+import { AuthenticationResponse } from '../types/models/AuthenticationResponse';
 import { TwoFactorRequest } from '../types/models/TwoFactorRequest';
+import { TwoFactorResponse } from '../types/models/TwoFactorResponse';
 import { apiUrl } from '../config';
 
 export async function authenticate(request: AuthenticationRequest) {
@@ -11,7 +13,7 @@ export async function authenticate(request: AuthenticationRequest) {
     body: JSON.stringify(request),
   });
 
-  return await req.json();
+  return (await req.json()) as AuthenticationResponse;
 }
 
 export async function twoFactorVerify(
@@ -27,7 +29,7 @@ export async function twoFactorVerify(
     body: JSON.stringify(request),
   });
 
-  return await req.json();
+  return (await req.json()) as TwoFactorResponse;
 }
 
 export async function twoFactorEnable(token: string) {
