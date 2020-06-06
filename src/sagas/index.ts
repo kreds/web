@@ -4,9 +4,10 @@ import { ActionModel } from '../types/Models';
 import { ActionType } from '../types/ActionType';
 import { currentUser } from '../services/Authentication';
 import { setCurrentUserAction, setAuthenticatedAction } from '../actions/state';
+import { getToken } from '../helpers/token';
 
 function* initializeAuthentication() {
-  if (localStorage.getItem('kreds_token')) {
+  if (getToken()) {
     const res = yield call(() => currentUser());
     if (res.isAuthenticated) {
       yield put(setAuthenticatedAction(true));

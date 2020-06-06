@@ -21,7 +21,7 @@ const Authentication: React.FC = () => {
 
   const authenticated = useCallback(
     async (token: string) => {
-      localStorage.setItem('kreds_token', token);
+      setToken(token);
       dispatch(setAuthenticatedAction(true));
     },
     [dispatch]

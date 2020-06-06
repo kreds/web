@@ -4,14 +4,14 @@ import { TwoFactorRequest } from '../types/models/TwoFactorRequest';
 import { TwoFactorResponse } from '../types/models/TwoFactorResponse';
 import { User } from '../types/models/User';
 import { apiUrl } from '../config';
+import { requestHeaders } from '../helpers/token';
 
 export async function currentUser() {
   const req = await fetch(apiUrl + 'v1/authentication', {
     method: 'GET',
-    headers: {
+    headers: requestHeaders({
       'Content-Type': 'application/json',
-      Authorization: localStorage.getItem('kreds_token') as string,
-    },
+    }),
   });
 
   return (await req.json()) as {
