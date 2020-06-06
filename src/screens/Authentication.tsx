@@ -21,6 +21,7 @@ const Authentication: React.FC = () => {
 
   const authenticated = useCallback(
     async (token: string) => {
+      localStorage.setItem('kreds_token', token);
       dispatch(setAuthenticatedAction(true));
     },
     [dispatch]
@@ -45,7 +46,7 @@ const Authentication: React.FC = () => {
     if (res.result === 'require_2fa') {
       setPassword('');
       setTwoFaRequired(true);
-    } else if (res.result === 'success') {
+    } else if (res.result === 'success' && res.token) {
       authenticated(res.token);
     }
   }, [username, password, setToken, setTwoFaRequired, authenticated]);
@@ -67,7 +68,7 @@ const Authentication: React.FC = () => {
     if (res.token) {
       authenticated(res.token);
     }
-  }, [password, setToken, token, authenticated]);
+  }, [password, token, authenticated]);
 
   const updateUsername = (e: React.ChangeEvent<HTMLInputElement>) =>
     setUsername(e.target.value);

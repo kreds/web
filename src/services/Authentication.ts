@@ -2,7 +2,23 @@ import { AuthenticationRequest } from '../types/models/AuthenticationRequest';
 import { AuthenticationResponse } from '../types/models/AuthenticationResponse';
 import { TwoFactorRequest } from '../types/models/TwoFactorRequest';
 import { TwoFactorResponse } from '../types/models/TwoFactorResponse';
+import { User } from '../types/models/User';
 import { apiUrl } from '../config';
+
+export async function currentUser() {
+  const req = await fetch(apiUrl + 'v1/authentication', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: localStorage.getItem('kreds_token') as string,
+    },
+  });
+
+  return (await req.json()) as {
+    isAuthenticated: boolean;
+    user?: User;
+  };
+}
 
 export async function authenticate(request: AuthenticationRequest) {
   const req = await fetch(apiUrl + 'v1/authentication', {
