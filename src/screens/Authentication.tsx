@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Input } from 'baseui/input';
 import { Button } from 'baseui/button';
 import { FormControl } from 'baseui/form-control';
@@ -6,15 +7,24 @@ import { Card, StyledBody, StyledAction } from 'baseui/card';
 
 import { authenticate, twoFactorVerify } from '../services/Authentication';
 import { AuthenticationRequestType } from '../types/models/AuthenticationRequest';
+import { setAuthenticatedAction } from '../actions/state';
 
 import { Centered } from '../styles';
 
 const Authentication: React.FC = () => {
+  const dispatch = useDispatch();
   const [token, setToken] = useState<string>();
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [twoFaRequired, setTwoFaRequired] = useState(false);
+
+  const authenticated = useCallback(
+    async (token: string) => {
+      dispatch(setAuthenticatedAction(true));
+    },
+    [dispatch]
+  );
 
   const click = useCallback(async () => {
     setLoading(true);
@@ -35,8 +45,10 @@ const Authentication: React.FC = () => {
     if (res.result === 'require_2fa') {
       setPassword('');
       setTwoFaRequired(true);
+    } else if (res.result === 'success') {
+      authenticated(res.token);
     }
-  }, [username, password, setToken, setTwoFaRequired]);
+  }, [username, password, setToken, setTwoFaRequired, authenticated]);
 
   const click2FA = useCallback(async () => {
     if (!token) return;
@@ -53,9 +65,9 @@ const Authentication: React.FC = () => {
     setLoading(false);
 
     if (res.token) {
-      setToken(res.token);
+      authenticated(res.token);
     }
-  }, [password, setToken, token]);
+  }, [password, setToken, token, authenticated]);
 
   const updateUsername = (e: React.ChangeEvent<HTMLInputElement>) =>
     setUsername(e.target.value);
