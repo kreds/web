@@ -10,18 +10,20 @@ import { AuthenticationRequestType } from '../types/models/AuthenticationRequest
 import { setAuthenticatedAction } from '../actions/state';
 
 import { Centered } from '../styles';
+import { setToken, setRefreshToken } from '../helpers/token';
 
 const Authentication: React.FC = () => {
   const dispatch = useDispatch();
-  const [token, setToken] = useState<string>();
+  const [temporaryToken, setTemporaryToken] = useState<string>();
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [twoFaRequired, setTwoFaRequired] = useState(false);
 
   const authenticated = useCallback(
-    async (token: string) => {
+    async (token: string, refreshToken?: string) => {
       setToken(token);
+      setRefreshToken(refreshToken);
       dispatch(setAuthenticatedAction(true));
     },
     [dispatch]
@@ -40,19 +42,19 @@ const Authentication: React.FC = () => {
     setLoading(false);
 
     if (res.token) {
-      setToken(res.token);
+      setTemporaryToken(res.token);
     }
 
     if (res.result === 'require_2fa') {
       setPassword('');
       setTwoFaRequired(true);
     } else if (res.result === 'success' && res.token) {
-      authenticated(res.token);
+      authenticated(res.token, res.refreshToken);
     }
-  }, [username, password, setToken, setTwoFaRequired, authenticated]);
+  }, [username, password, setTemporaryToken, setTwoFaRequired, authenticated]);
 
   const click2FA = useCallback(async () => {
-    if (!token) return;
+    if (!temporaryToken) return;
 
     setLoading(true);
 
@@ -60,15 +62,15 @@ const Authentication: React.FC = () => {
       {
         token: password,
       },
-      token
+      temporaryToken
     );
 
     setLoading(false);
 
     if (res.token) {
-      authenticated(res.token);
+      authenticated(res.token, res.refreshToken);
     }
-  }, [password, token, authenticated]);
+  }, [password, temporaryToken, authenticated]);
 
   const updateUsername = (e: React.ChangeEvent<HTMLInputElement>) =>
     setUsername(e.target.value);
@@ -78,7 +80,7 @@ const Authentication: React.FC = () => {
   return (
     <Centered>
       <Card title="Authenticate">
-        {!token ? (
+        {!temporaryToken ? (
           <>
             <StyledBody>
               <FormControl label="Username">
