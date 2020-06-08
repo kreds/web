@@ -10,7 +10,7 @@ export const Dashboard: React.FC = () => {
 
   const click2FAEnable = useCallback(async () => {
     if (!token) return;
-    const res = await twoFactorEnable(token);
+    const res = await twoFactorEnable();
 
     setResponse(JSON.stringify(res));
     if (res.uri) {

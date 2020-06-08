@@ -10,7 +10,7 @@ export function getToken() {
   return localStorageGet(LOCAL_STORAGE_KEY_TOKEN);
 }
 
-export function requestHeaders(customHeaders: Record<string, string>) {
+export function requestHeaders(customHeaders?: Record<string, string>) {
   if (getToken()) {
     return {
       ...customHeaders,
