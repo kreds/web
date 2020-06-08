@@ -1,13 +1,24 @@
 import { localStorageSet, localStorageGet } from './localStorage';
 
-export const LOCAL_STORAGE_KEY_TOKEN = 'kreds_token';
+export enum LocalStorageKeys {
+  TOKEN = 'kreds_token',
+  REFRESH_TOKEN = 'kreds_refresh_token',
+}
 
 export function setToken(token?: string) {
-  localStorageSet(LOCAL_STORAGE_KEY_TOKEN, token);
+  localStorageSet(LocalStorageKeys.TOKEN, token);
 }
 
 export function getToken() {
-  return localStorageGet(LOCAL_STORAGE_KEY_TOKEN);
+  return localStorageGet(LocalStorageKeys.TOKEN);
+}
+
+export function setRefreshToken(token?: string) {
+  localStorageSet(LocalStorageKeys.REFRESH_TOKEN, token);
+}
+
+export function getRefreshToken() {
+  return localStorageGet(LocalStorageKeys.REFRESH_TOKEN);
 }
 
 export function requestHeaders(customHeaders?: Record<string, string>) {
